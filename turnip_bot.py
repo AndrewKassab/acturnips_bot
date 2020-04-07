@@ -5,20 +5,30 @@ import re
 
 from selenium import webdriver
 
-url = ''
+driver = webdriver.Chrome()
+driver.implicitly_wait(3)
 
-browser = webdriver.Chrome()
+name = 'Andrew'
 
-reddit = praw.Reddit(client_id='mxKovfux0AzbgQ', client_secret='sksldmRIZaApy2vGr-kBn7H7MJo', user_agent='Turnip Queue Bot1.0')
+reddit = praw.Reddit(client_id='mxKovfux0AzbgQ', client_secret='sksldmRIZaApy2vGr-kBn7H7MJo',
+                     user_agent='Turnip Queue Bot1.0')
 
 subreddit = reddit.subreddit('acturnips')
 
+url = ''
+
 print('Bot has started.')
 while True:
-    submission = list(subreddit.new(limit=1))[0]
+    submission = list(subreddit.new(limit=4))[3]
     match = re.search('https://turnip.exchange/island/........', submission.selftext)
     if match:
-        url = match.group(0)
-        browser.get(url)
-        break
+        try:
+            if url != match.group(0):
+                url = match.group(0)
+                driver.execute_script("window.open('{}');".format(url))
+                driver.find_element_by_xpath("//button[contains(text(),'Join this queue')]").click()
+                driver.find_element_by_xpath('//input').send_keys(name)
+                driver.find_element_by_xpath("//button[contains(text(),'Join')]").click()
+        except:
+            print('Damn... queue is full or post was bot resistant....')
     time.sleep(2)
