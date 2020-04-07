@@ -19,7 +19,7 @@ url = ''
 
 print('Bot has started.')
 while True:
-    submission = list(subreddit.new(limit=4))[3]
+    submission = list(subreddit.new(limit=1))[0]
     match = re.search('https://turnip.exchange/island/........', submission.selftext)
     if match:
         try:
@@ -27,8 +27,11 @@ while True:
                 url = match.group(0)
                 driver.execute_script("window.open('{}');".format(url))
                 driver.find_element_by_xpath("//button[contains(text(),'Join this queue')]").click()
+                time.sleep(.5)
                 driver.find_element_by_xpath('//input').send_keys(name)
+                time.sleep(.5)
                 driver.find_element_by_xpath("//button[contains(text(),'Join')]").click()
+                time.sleep(.5)
         except:
             print('Damn... queue is full or post was bot resistant....')
     time.sleep(2)
