@@ -1,14 +1,15 @@
 #!/usr/bin/python
 import praw
-import webbrowser
 import time
 import re
 
+from selenium import webdriver
+
 url = ''
 
-chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
+browser = webdriver.Chrome()
 
-reddit = praw.Reddit(client_id='mxKovfux0AzbgQ', client_secret='sksldmRIZaApy2vGr-kBn7H7MJo', user_agent='Turnip Queue Bot0.1')
+reddit = praw.Reddit(client_id='mxKovfux0AzbgQ', client_secret='sksldmRIZaApy2vGr-kBn7H7MJo', user_agent='Turnip Queue Bot1.0')
 
 subreddit = reddit.subreddit('acturnips')
 
@@ -18,6 +19,6 @@ while True:
     match = re.search('https://turnip.exchange/island/........', submission.selftext)
     if match:
         url = match.group(0)
-        webbrowser.open_new(url)
+        browser.get(url)
         break
     time.sleep(2)
